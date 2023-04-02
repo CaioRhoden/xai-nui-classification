@@ -1,3 +1,13 @@
+# Data
+data/grade
+data/modelos
+data/nuis
+data/compacted_data
+data/model_input/X_test.pkl
+data/model_input/X_train.pkl
+data/model_input/y_test.pkl
+data/model_input/y_train.pkl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
