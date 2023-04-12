@@ -1,2 +1,2 @@
 # xai-nui-classification
-This notebook has the goal to correct predict the informal urban areas
+This rep has the goal to build an algorith capable of predict informal urban areas and explain it
