@@ -1,4 +1,9 @@
+__pycache__
+.ipynb_checkpoints
+
+
 # Data
+data
 data/grade
 data/modelos
 data/nuis
