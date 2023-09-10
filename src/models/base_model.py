@@ -1,7 +1,7 @@
 class BaseModel:
-    def __init__(self, config):
-        self.config = config
-        self.model = None  # Initialize the model attribute
+    def __init__(self, **kwargs):
+        self.model = kwargs.get('model', None)
+        self.config = kwargs.get('config', None)
 
     def train(self, train_data):
         raise NotImplementedError("Train method must be implemented in child classes.")

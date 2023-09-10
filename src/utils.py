@@ -1,7 +1,8 @@
 
 import pickle
-from itertools import combinations, permutations
+from itertools import combinations
 import pandas as pd
+import os
 
 def load_model(path):
 
@@ -20,16 +21,22 @@ def generate_combinations(polos, len_1, len_2):
 
 
 def generate_dataset_split(polos):
-    print(polos)
     
-    X = pd.read_pickle(f"../../data/model_input/X_{polos[0]}.pkl").drop(['Polo'], axis=1)
-    y = pd.read_pickle(f"../../data/model_input/y_{polos[0]}.pkl")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(os.path.join(current_dir, "../data/model_input"))
+    file_x = os.path.join(data_dir, f"X_{polos[0]}.pkl")
+    file_y = os.path.join(data_dir, f"y_{polos[0]}.pkl")
+    
+    X = pd.read_pickle(file_x).drop(['Polo'], axis=1)
+    y = pd.read_pickle(file_y)
 
     
     if len(polos) > 1:
         for i in range(1,len(polos)):
-            X = pd.concat([X,  pd.read_pickle(f"../../data/model_input/X_{polos[i]}.pkl").drop(['Polo'], axis=1)], ignore_index=True)
-            y = pd.concat([y, pd.read_pickle(f"../../data/model_input/y_{polos[i]}.pkl")], ignore_index=True)
+            file_x = os.path.join(data_dir, f"X_{polos[i]}.pkl")
+            file_y = os.path.join(data_dir, f"y_{polos[i]}.pkl")
+            X = pd.concat([X,  pd.read_pickle(file_x).drop(['Polo'], axis=1)], ignore_index=True)
+            y = pd.concat([y, pd.read_pickle(file_y)], ignore_index=True)
     
     return X, y
 
