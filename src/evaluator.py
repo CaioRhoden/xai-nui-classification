@@ -42,11 +42,11 @@ class XGBoostEvaluator:
     	None
     	"""
 
-        self._y_pred = self._model.predict(X_test)
-        self._y_pred_proba = self._model.predict_proba(X_test)[:, 1]
+        self._y_pred = self._model.model.predict(X_test)
+        self._y_pred_proba = self._model.model.predict_proba(X_test)[:, 1]
         
         #Acc
-        self.acc = self._model.score(X_test, y_test)
+        self.acc = self._model.model.score(X_test, y_test)
 
         #F1 Score
         self.f1_score = metrics.f1_score(y_test, self._y_pred)
@@ -72,8 +72,8 @@ class XGBoostEvaluator:
             None
         """
 
-        cm = metrics.confusion_matrix(y_test, self._y_pred, labels=self._model.classes_)
-        metrics.ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=self._model.classes_).plot()
+        cm = metrics.confusion_matrix(y_test, self._y_pred, labels=self._model.model.classes_)
+        metrics.ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=self._model.model.classes_).plot()
         plt.show()
 
 
