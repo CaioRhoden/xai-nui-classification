@@ -10,4 +10,7 @@ class BaseModel:
         raise NotImplementedError("Evaluate method must be implemented in child classes.")
 
     def predict(self, input_data):
-        raise NotImplementedError("Predict method must be implemented in child classes.")
+        return self.model.predict(input_data)
+
+    def predict_proba(self, input_data):
+        return self.model.predict_proba(input_data)
