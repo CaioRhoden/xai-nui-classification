@@ -43,3 +43,19 @@ def generate_dataset_split(polos):
 def save_combination(polo, list):
     with open(f'../../data/models/{polo}/combination.pkl', 'wb') as file:
         pickle.dump(list, file)
+
+def load_combinations(file: str) -> dict:
+    """
+	Load combinations from a file and return them as a dictionary.
+
+	:param file: The name of the file to load the combinations from.
+	:type file: str
+	:return: A dictionary containing the loaded combinations.
+	:rtype: dict
+	"""
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.abspath(os.path.join(current_dir, f"../data/{file}"))
+
+    with open(data_dir, 'rb') as combinations:
+        return(pickle.load(combinations))

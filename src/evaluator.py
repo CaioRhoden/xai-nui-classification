@@ -42,8 +42,8 @@ class XGBoostEvaluator:
     	None
     	"""
 
-        self._y_pred = self._model.model.predict(X_test)
-        self._y_pred_proba = self._model.model.predict_proba(X_test)[:, 1]
+        self._y_pred = self._model.predict(X_test)
+        self._y_pred_proba = self._model.predict_proba(X_test)[:, 1]
         
         #Acc
         self.acc = self._model.model.score(X_test, y_test)
