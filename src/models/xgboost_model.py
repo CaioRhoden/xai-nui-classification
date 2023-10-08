@@ -18,6 +18,9 @@ class XGBoostModel(BaseModel):
             # Load the model from the file
             self.model = pickle.load(file)
             self.config = self.model.best_params_
+        
+        return self.model
+        
             
     
 
