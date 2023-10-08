@@ -1,5 +1,6 @@
 import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 class Evaluator:
@@ -44,7 +45,9 @@ class Evaluator:
         fpr, tpr, thresholds = metrics.roc_curve(y_test, self._y_pred_proba)
         metrics.RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=self.roc_auc_score, estimator_name=plot_name).plot()
         plt.show()
-
+    
+    def generate_csv_line(self, type, train, val, test):
+        pass
     
     
 
@@ -99,6 +102,38 @@ class XGBoostEvaluator(Evaluator):
         metrics.ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=self._model.model.classes_).plot()
         plt.show()
 
+    def generate_csv_line(self, type, train, val, test):
+        
+        cities = ['Porto Alegre', 'Marabá', 'Brasília', 'Juazeiro do Norte', 'Recife', 'Belo Horizonte']
+
+        values_cities = {}
+        for c in cities:
+            if c in train:
+                values_cities[c] = 'Treino'
+            elif c in val:
+                values_cities[c] = 'Validação'
+            else:
+                values_cities[c] = 'Teste'
+        
+        
+        basis = {
+            'type': [type],
+            'porto_alegre': [values_cities['Porto Alegre']],
+            'brasilia': [values_cities['Brasília']],
+            'maraba': [values_cities['Marabá']],
+            'juazeiro_do_norte': [values_cities['Juazeiro do Norte']],
+            'recife': [values_cities['Recife']],
+            'belo_horizonte': [values_cities['Belo Horizonte']],
+            'auc_score': [self.roc_auc_score],
+            'f1_score': [self.f1_score],
+            'acc': [self.acc],
+            'recall': [self.recall],
+            'precision': [self.precision]
+        }
+
+        df = pd.DataFrame(basis)
+        return df
+
 
 
 class EnsambleEvaluator(Evaluator):
@@ -150,5 +185,35 @@ class EnsambleEvaluator(Evaluator):
         cm = metrics.confusion_matrix(y_test, self._y_pred, labels=self._model.classes_)
         metrics.ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=self._model.classes_).plot()
         plt.show()
+    
+    def generate_csv_line(self, type, test):
+        
+        cities = ['Porto Alegre', 'Marabá', 'Brasília', 'Juazeiro do Norte', 'Recife', 'Belo Horizonte']
+
+        values_cities = {}
+        for c in cities:
+            if c in test:
+                values_cities[c] = 'Teste'
+            else:
+                values_cities[c] = 'Treino'
+        
+        
+        basis = {
+            'type': [type],
+            'porto_alegre': [values_cities['Porto Alegre']],
+            'brasilia': [values_cities['Brasília']],
+            'maraba': [values_cities['Marabá']],
+            'juazeiro_do_norte': [values_cities['Juazeiro do Norte']],
+            'recife': [values_cities['Recife']],
+            'belo_horizonte': [values_cities['Belo Horizonte']],
+            'auc_score': [self.roc_auc_score],
+            'f1_score': [self.f1_score],
+            'acc': [self.acc],
+            'recall': [self.recall],
+            'precision': [self.precision]
+        }
+
+        df = pd.DataFrame(basis)
+        return df
 
     
