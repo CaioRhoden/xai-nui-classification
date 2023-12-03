@@ -20,10 +20,11 @@ def generate_combinations(polos, len_1, len_2):
     return valid_combinations
 
 
-def generate_dataset_split(polos):
+def generate_dataset_split(polos, classification):
+    
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.abspath(os.path.join(current_dir, "../data/model_input"))
+    data_dir = os.path.abspath(os.path.join(current_dir, f"../data/model_input/{classification}/"))
     file_x = os.path.join(data_dir, f"X_{polos[0]}.pkl")
     file_y = os.path.join(data_dir, f"y_{polos[0]}.pkl")
     
@@ -38,10 +39,10 @@ def generate_dataset_split(polos):
             X = pd.concat([X,  pd.read_pickle(file_x).drop(['Polo'], axis=1)], ignore_index=True)
             y = pd.concat([y, pd.read_pickle(file_y)], ignore_index=True)
     
-    return X, y
+    return X, y, file_x
 
-def save_combination(polo, list):
-    with open(f'../../data/models/{polo}/combination.pkl', 'wb') as file:
+def save_combination(polo, classification, list):
+    with open(f'../../data/models/{classification}/{polo}/combination.pkl', 'wb') as file:
         pickle.dump(list, file)
 
 def load_combinations(file: str) -> dict:
