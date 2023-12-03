@@ -39,7 +39,7 @@ def generate_dataset_split(polos, classification):
             X = pd.concat([X,  pd.read_pickle(file_x).drop(['Polo'], axis=1)], ignore_index=True)
             y = pd.concat([y, pd.read_pickle(file_y)], ignore_index=True)
     
-    return X, y, file_x
+    return X, y                                                                                                         
 
 def save_combination(polo, classification, list):
     with open(f'../../data/models/{classification}/{polo}/combination.pkl', 'wb') as file:
