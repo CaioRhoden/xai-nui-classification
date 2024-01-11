@@ -6,7 +6,7 @@ from sklearn.metrics import f1_score
 
 from models.base_model import BaseModel
 
-class LightGBoostModel(BaseModel):
+class XGBoostModel(BaseModel):
 
     def __init__(self, **kwargs):
         super().__init__()
