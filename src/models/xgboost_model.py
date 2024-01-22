@@ -2,7 +2,9 @@ import sys
 sys.path.append('../../src')
 import pickle
 import optuna
-from sklearn.metrics import f1_score
+from sklearn.metrics import auc
+import sklearn.metrics as metrics
+
 
 from models.base_model import BaseModel
 
@@ -33,7 +35,7 @@ class XGBoostModel(BaseModel):
         y_pred_thresholded = (y_pred_proba >= threshold).astype(int)
 
         # Calculate F1 Score
-        score = f1_score(y_true, y_pred_thresholded, average='weighted')
+        score = auc(y_true, y_pred_thresholded)
 
         return score
     
