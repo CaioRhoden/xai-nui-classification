@@ -1,9 +1,0 @@
-jupyterlab
-pandas
-scikit-learn
-scipy
-seaborn
-xgboost
-geopandas
-optuna
-lightgbm

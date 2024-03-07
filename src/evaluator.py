@@ -1,10 +1,9 @@
 import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import numpy as np
 
 class Evaluator:
-
     
     def __init__(self, model) -> None:
         self._model = model
@@ -216,4 +215,78 @@ class EnsambleEvaluator(Evaluator):
         df = pd.DataFrame(basis)
         return df
 
+class MultiClassEvaluator(Evaluator):
+
+    def __init__(self, model) -> None:
+        super().__init__(model)
+        self.roc_auc_class_1 = None
+        self.roc_auc_class_2 = None
+        self.roc_auc_score = None
+        self.f1_score = None
+
+        self.y_pred = None
+
+
+
+    def _change_labels(self, df, target_class) -> np.ndarray:
+        new_df = np.zeros_like(df)
+        new_df[df == target_class] = 1
+        return new_df
+        
+    def evaluate(self, X_test, y_test):
+
+
+        self._y_pred = self._model.predict(X_test)
+        self._y_pred_proba = self._model.predict_proba(X_test)
+
+        #F1 Score
+        self.f1_score = metrics.f1_score(y_test, self._y_pred, average='macro')
+
+        #Auc Score
+        self.roc_auc_score = metrics.roc_auc_score(y_test, self._y_pred_proba, multi_class="ovr")
+
+        #Auc Score 1
+        self.roc_auc_class_1 = metrics.roc_auc_score(self._change_labels(y_test, 1), self._change_labels(self._y_pred, 1))
+
+
+        #Auc Score 2
+        self.roc_auc_class_2 = metrics.roc_auc_score(self._change_labels(y_test, 2), self._change_labels(self._y_pred, 2))
+
+
+        print(f"F1 Score: {self.f1_score}")
+        print(f"ROC AUC Score: {self.roc_auc_score}")
+        print(f"ROC AUC Score Class 1: {self.roc_auc_class_1}")
+        print(f"ROC AUC Score Class 2: {self.roc_auc_class_2}")
+        
+    def generate_csv_line(self, type, test):
+        
+        cities = ['Porto Alegre', 'Marabá', 'Brasília', 'Juazeiro do Norte', 'Recife', 'Belo Horizonte']
+
+        values_cities = {}
+        for c in cities:
+            if c in test:
+                values_cities[c] = 'Teste'
+            else:
+                values_cities[c] = 'Treino'
+        
+        
+        basis = {
+            'type': [type],
+            'porto_alegre': [values_cities['Porto Alegre']],
+            'brasilia': [values_cities['Brasília']],
+            'maraba': [values_cities['Marabá']],
+            'juazeiro_do_norte': [values_cities['Juazeiro do Norte']],
+            'recife': [values_cities['Recife']],
+            'belo_horizonte': [values_cities['Belo Horizonte']],
+            'auc_score': [self.roc_auc_score],
+            'f1_score': [self.f1_score],
+            'roc_auc_class_1': [self.roc_auc_class_1],
+            'roc_auc_class_2': [self.roc_auc_class_2]
+        }
+
+        df = pd.DataFrame(basis)
+        return df
+
     
+
+
