@@ -2,7 +2,7 @@ import sys
 sys.path.append('../../src')
 import pickle
 import optuna
-from sklearn.metrics import auc
+from sklearn.metrics import roc_auc_score
 import sklearn.metrics as metrics
 
 
@@ -27,26 +27,28 @@ class XGBoostModel(BaseModel):
     
 
 
-    def _objective(self, trial, y_pred_proba, y_true):
+    def _thrsh_objective(self, trial, y_pred_proba, y_true):
 
         threshold = trial.suggest_float("threshold", 0.0, 1.0)
 
         # Apply the threshold to your model's predictions
         y_pred_thresholded = (y_pred_proba >= threshold).astype(int)
 
-        # Calculate F1 Score
-        score = auc(y_true, y_pred_thresholded)
+        # Calculate ROCAU
+        score = roc_auc_score(y_true, y_pred_thresholded)
 
         return score
     
     def find_best_threshold(self, X, y):
         study = optuna.create_study(direction="maximize")
         y_pred_proba = self.model.predict_proba(X)[::,1]
-        study.optimize(lambda trial: self._objective(trial, y_pred_proba, y), n_trials=50)
+        study.optimize(lambda trial: self._thrsh_objective(trial, y_pred_proba, y), n_trials=50)
         best_threshold = study.best_trial.params['threshold']
         self.threshold = best_threshold
         return best_threshold
-        
+
+
+
     def predict(self, input_data):
 
         if self.threshold == 0.5:
